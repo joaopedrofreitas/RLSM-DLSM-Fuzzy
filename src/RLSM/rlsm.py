@@ -162,7 +162,7 @@ class RLSM:
         Atualiza os parâmetros 'u' e a matriz de ganho 'P'
         usando uma nova amostra (x_k, y_k) via RLS.
         """
-        # Obter vetor de ativação d_k
+        # Obter vetor de ativação d_k 
         d_k, s_k = self._calculate_activations(x_k)
         
         if s_k == 0.0:
@@ -282,6 +282,7 @@ if __name__ == "__main__":
     file_name = 'rlsm_mse_adult_dataset.png'
     output_path = os.path.join(output_folder, file_name)
     
+    # Salvamento dos Arquivos
     try:
         plt.savefig(output_path)
         print(f"Gráfico salvo com sucesso em: {output_path}")
