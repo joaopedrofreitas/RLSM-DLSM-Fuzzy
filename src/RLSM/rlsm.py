@@ -86,7 +86,7 @@ class RLSM:
         
         # Matriz de Ganho (P)
         # Tamanho é (2N, 2N)
-        # P^0 = alpha * I, com alpha grande
+        # P^0 = alpha * I
         self.P = P_alpha * np.identity(2 * self.N)
         
         # Parâmetros do Antecedente (Centros)
@@ -98,8 +98,7 @@ class RLSM:
         """
         Define os centros das N regras usando K-Means.
         No RLSM, os antecedentes A_i são fixos e o aprendizado
-        ocorre nos consequentes.
-        [Baseado na ideia de 'Cluster the data' - cite: 542, 521]
+        ocorre nos consequentes. Tipo o Cluster Data que fala no artigo
         """
         print(f"Definindo {self.N} centros de regras usando K-Means...")
         kmeans = KMeans(n_clusters=self.N, random_state=42, n_init=10)
@@ -144,7 +143,6 @@ class RLSM:
         """
         Prevê a saída y_hat para uma amostra x_k usando o estado ATUAL
         do vetor de parâmetros 'u'.
-        [cite: 140]
         """
         d_k, s_k = self._calculate_activations(x_k)
         
@@ -166,18 +164,16 @@ class RLSM:
         d_k, s_k = self._calculate_activations(x_k)
         
         if s_k == 0.0:
-            return # Nenhuma regra ativada, não é possível aprender
+            return # Nenhuma regra ativada
 
         d_k_T = d_k.T # Transposta (vetor linha)
         
         # Calcular o Erro de Predição (a priori)
         # erro = y_k - d_k * u^(k-1)
-        # [parte de cite: 138]
         prediction_error = y_k - (d_k_T @ self.u)
         
         # Atualizar a Matriz de Ganho P
         # P^k = (1/λ) * (P^(k-1) - ...)
-        # [cite: 136]
         P_num = self.P @ d_k @ d_k_T @ self.P
         P_den = self.lambda_ + (d_k_T @ self.P @ d_k)
         
@@ -185,7 +181,6 @@ class RLSM:
         
         # Atualizar o Vetor de Parâmetros u
         # u^k = u^(k-1) + P^k * d_k * erro
-        # [cite: 138]
         self.u = self.u + self.P @ d_k * prediction_error
         
         return prediction_error[0, 0]
@@ -195,7 +190,7 @@ if __name__ == "__main__":
     # Configuracoes
     DATA_PATH = 'datasets/adult.data'             
     N_RULES = 50                            # Número de regras fuzzy (hiperparâmetro)
-    FORGET_FACTOR = 0.998       # Fator de esquecimento, próximo de 1 p/ estabilidade
+    FORGET_FACTOR = 0.998                   # Fator de esquecimento, próximo de 1 p/ estabilidade => Segundo o Artigo.
     SIGMA = 0.5                             # Largura da MF Gaussiana (hiperparâmetro)
     INIT_SAMPLES = 1000                     # Amostras para definir os centros das regras
     
@@ -211,7 +206,7 @@ if __name__ == "__main__":
         print(f"Ocorreu um erro ao processar os dados: {e}")
         exit()
 
-    # Inicialização do Modelo RLSM 
+    # Inicialização da classe do RLSM 
     model = RLSM(
         n_rules=N_RULES,
         n_features=n_features,

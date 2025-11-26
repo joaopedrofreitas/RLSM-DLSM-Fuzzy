@@ -22,7 +22,7 @@ def fp_gaussiana(x, centro, sigma): # Usando uma função de pertinencia gaussia
 
 # TSK Tradicional
 
-def criar_regras_tsk(n_regras, x_min, x_max):
+def criar_regras_tsk(n_regras, x_min, x_max): # Cria as regras a partir dos centros, é randomico 
   centros = np.linspace(x_min, x_max, n_regras)
   sigma = (x_max - x_min) / (n_regras * 1.5)
   regras = []
@@ -119,7 +119,7 @@ def prever_dlsm(x, regras):
   return ponderado / total_tau, saidas_m_i, forcas_tau
 
 def treinar_dlsm_batch(regras, xs, ys):
-  """Treina parâmetros (v, w) via Pseudo-Inversa (Eq. 7-10 do artigo)."""
+  """Treina parâmetros (v, w) via Pseudo-Inversa ."""
   print("Iniciando treinamento TSK (DLSM - Batch)...")
   n_regras = len(regras)
   K = len(xs) # Número de pontos (K)
@@ -149,7 +149,7 @@ def treinar_dlsm_batch(regras, xs, ys):
 
   # Resolver u = D+ z (Eq. 9, 10 )
   # u = [v_1, w_1, v_2, w_2, ..., v_N, w_N]^T
-  print("Calculando a pseudo-inversa (pode levar um momento)...")
+  print("Calculando a pseudo-inversa ...")
   D_plus = np.linalg.pinv(D)
   u = D_plus @ y_vec
 
